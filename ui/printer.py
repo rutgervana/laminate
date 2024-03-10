@@ -48,7 +48,7 @@ def draw_tile_size(scaled_tile, original_plan_tile, tile_point, win):
 
 
 class Printer:
-    WIDTH = 1000
+    WIDTH = 2000
 
     @staticmethod
     def print(plan: Plan):

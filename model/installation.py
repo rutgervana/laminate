@@ -26,7 +26,11 @@ class Installation:
         for i, r in enumerate(result.rows):
             print(str(i) + " : ", end='')
             print(*r)
-
+        n_tiles = 4*7+11*6+5  # please fill in amount of full tiles
+        placed_tile_surface = (result.room.l1*result.room.l2)
+        used_tiles_surface = n_tiles*self.tile.width*self.tile.length
+        waste_percentage = (used_tiles_surface-placed_tile_surface) / placed_tile_surface * 100
+        print(f"Estimated waste percentage: {waste_percentage:.1f}")
         print("##")
 
     def process(self):
