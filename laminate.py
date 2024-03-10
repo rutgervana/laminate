@@ -5,16 +5,16 @@ from ui.printer import Printer
 
 
 def main():
-    room = Room(3330, 2700)
-    tile = Tile(1286, 194)
+    room = Room(8420, 3795)
+    tile = Tile(1380, 244)
     border = 8
     init = {
-        5: 1286,
-        10: 1286
+        0: 1*1380/3,
+        1: 2*1380/3,
+        2: 1380
     }
 
-    installation = Installation(room, tile, border, init)
-
+    installation = Installation(room, tile, border, init, True)
     plan = installation.process()
     installation.print()
     Printer.print(plan)

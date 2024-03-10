@@ -7,11 +7,12 @@ import copy
 
 class Installation:
 
-    def __init__(self, room, tile, border, init):
+    def __init__(self, room, tile, border, init, reuse_tiles: bool = False):
         self.room = room
         self.tile = tile
         self.border = border
         self.init_tiles = init
+        self.reuse_tiles = reuse_tiles  # reuse modulo based on init of first tiles
 
     def print(self):
         print("## Installation ##")
@@ -30,14 +31,26 @@ class Installation:
 
     def process(self):
         actual_room = Room(self.room.l1 - 2 * self.border, self.room.l2 - 2 * self.border)
-
         rows = math.ceil(actual_room.l2 / self.tile.width)
         rest = 0
         result = []
-        for r in range(rows):
-            row, rest = self.create_row(actual_room, rest, self.init_tiles, r, (r + 1) == rows)
-            result.append(row)
-
+        saved_tiles = list()
+        if not self.reuse_tiles:
+            for r in range(rows):
+                row, rest = self.create_row(actual_room, rest, self.init_tiles, r, (r + 1) == rows)
+                result.append(row)
+        else:
+            for r in range(rows):
+                if r in self.init_tiles:
+                    row, rest = self.create_row(actual_room, rest, self.init_tiles, r, (r + 1) == rows)
+                    saved_tiles.append(rest)
+                elif saved_tiles:
+                    rest = saved_tiles.pop(0)
+                    row, rest = self.create_row(actual_room, rest, self.init_tiles, r, (r + 1) == rows)
+                    saved_tiles.append(rest)
+                else:
+                    row, rest = self.create_row(actual_room, rest, self.init_tiles, r, (r + 1) == rows)
+                result.append(row)
         return Plan(actual_room, result)
 
     def create_row(self, actual_room, rest, first_tiles, index, is_last):
